@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>اَلْقَامُوسُ النَّاطِقُ لِلْمَلَابِسِ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #f8f7ff;
+      --card-bg: #ffffff;
+      --text: #1a1a2e;
+      --text-sec: #6b6b8a;
+      --border: #e0deff;
+      --accent: #7F77DD;
+      --accent-light: #EEEDFE;
+      --accent-dark: #3C3489;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Tajawal', sans-serif;
+      direction: rtl;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    header {
+      background: linear-gradient(135deg, #3C3489 0%, #7F77DD 50%, #D4537E 100%);
+      color: white;
+      text-align: center;
+      padding: 2rem 1rem 1.5rem;
+    }
+    header .emojis { font-size: 40px; margin-bottom: 8px; }
+    header h1 {
+      font-family: 'Amiri', serif;
+      font-size: clamp(22px, 5vw, 32px);
+      font-weight: 700;
+      margin-bottom: 6px;
+      line-height: 1.6;
+    }
+    header p { font-size: 14px; opacity: .85; }
+
+    .controls {
+      background: white;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      box-shadow: 0 2px 8px rgba(0,0,0,.06);
+    }
+    .search-input {
+      font-family: 'Tajawal', sans-serif;
+      font-size: 15px;
+      padding: 10px 16px;
+      border-radius: 24px;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      width: 100%;
+      max-width: 380px;
+      direction: rtl;
+    }
+    .search-input:focus { outline: none; border-color: var(--accent); }
+    .speed-bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-sec);
+    }
+    .speed-bar input[type=range] { width: 130px; accent-color: var(--accent); }
+    .sv { font-weight: 700; color: var(--accent-dark); min-width: 36px; text-align: center; }
+
+    .tabs-wrap {
+      padding: .75rem 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+      background: white;
+      border-bottom: 1px solid var(--border);
+    }
+    .tb {
+      font-family: 'Tajawal', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 7px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: var(--bg);
+      color: var(--text-sec);
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .tb.active { border-color: var(--accent); background: var(--accent-light); color: var(--accent-dark); }
+    .tb:hover:not(.active) { background: var(--accent-light); }
+
+    main { padding: 1.2rem 1rem 3rem; max-width: 1100px; margin: 0 auto; }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+      gap: 14px;
+    }
+    /* word card */
+    .wc {
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 1.5px solid var(--border);
+      padding: 1rem;
+      cursor: pointer;
+      transition: transform .15s, box-shadow .15s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+    }
+    .wc:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(127,119,221,.18); }
+    .wc.speaking { border-color: var(--accent); background: var(--accent-light); }
+    .ce { font-size: 44px; line-height: 1; }
+    .cb { width: 100%; height: 5px; border-radius: 3px; }
+    .cw {
+      font-family: 'Amiri', serif;
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--text);
+      text-align: center;
+      line-height: 1.8;
+    }
+    .ct { font-size: 12px; color: var(--text-sec); text-align: center; }
+    .cx {
+      font-family: 'Amiri', serif;
+      font-size: 13px;
+      color: var(--accent-dark);
+      text-align: center;
+      background: var(--accent-light);
+      border-radius: 8px;
+      padding: 6px 8px;
+      width: 100%;
+      line-height: 1.8;
+    }
+    .sb {
+      font-family: 'Tajawal', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 5px 12px;
+      border-radius: 12px;
+      border: 1.5px solid #AFA9EC;
+      background: var(--accent-light);
+      color: var(--accent-dark);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all .15s;
+    }
+    .sb:hover { background: #CECBF6; }
+
+    /* verb card */
+    .vc {
+      background: var(--card-bg);
+      border-radius: 16px;
+      border: 1.5px solid var(--border);
+      padding: 1rem;
+      grid-column: span 2;
+    }
+    @media(max-width:480px){ .vc { grid-column: span 1; } }
+    .vc-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .vc-emoji { font-size: 36px; }
+    .vc-title { font-family: 'Amiri', serif; font-size: 22px; font-weight: 700; line-height: 1.8; }
+    .vc-en { font-size: 12px; color: var(--text-sec); }
+    .conj-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+    .ci {
+      background: var(--accent-light);
+      border-radius: 10px;
+      padding: 7px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .15s;
+      border: 1.5px solid transparent;
+    }
+    .ci:hover { border-color: #AFA9EC; }
+    .ci.speaking { border-color: var(--accent); background: #CECBF6; }
+    .ci-pron { font-size: 11px; color: var(--accent); font-weight: 600; margin-bottom: 2px; }
+    .ci-verb { font-family: 'Amiri', serif; font-size: 19px; font-weight: 700; color: #26215C; line-height: 1.7; }
+    .ci-en { font-size: 10px; color: var(--text-sec); }
+
+    .no-results { text-align: center; color: var(--text-sec); padding: 3rem; font-size: 16px; }
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 13px;
+      color: var(--text-sec);
+      border-top: 1px solid var(--border);
+      background: white;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="emojis">👔 🎽 👗</div>
+  <h1>اَلْقَامُوسُ النَّاطِقُ لِلْمَلَابِسِ</h1>
+  <p>اِضْغَطْ عَلَى أَيِّ كَلِمَةٍ أَوْ فِعْلٍ لِتَسْمَعَهُ بِوُضُوحٍ 🔊</p>
+</header>
+
+<div class="controls">
+  <input class="search-input" type="text" id="srch" placeholder="🔍 اِبْحَثْ عَنْ كَلِمَةٍ أَوْ فِعْلٍ..." oninput="doFilter()"/>
+  <div class="speed-bar">
+    <span>🐢 بَطِيءٌ</span>
+    <input type="range" id="spR" min="0.4" max="1.2" step="0.05" value="0.6" oninput="upSpd(this.value)"/>
+    <span>🐇 سَرِيعٌ</span>
+    <span class="sv" id="spL">٠٫٦</span>
+  </div>
+</div>
+
+<div class="tabs-wrap">
+  <button class="tb active" onclick="setCat('all',this)">🌟 اَلْكُلُّ</button>
+  <button class="tb" onclick="setCat('U',this)">👕 قِطَعٌ عُلْوِيَّةٌ</button>
+  <button class="tb" onclick="setCat('L',this)">👖 قِطَعٌ سُفْلِيَّةٌ</button>
+  <button class="tb" onclick="setCat('S',this)">👟 أَحْذِيَةٌ</button>
+  <button class="tb" onclick="setCat('A',this)">🧣 إِكْسِسْوَارَاتٌ</button>
+  <button class="tb" onclick="setCat('F',this)">🤵 رَسْمِيَّةٌ</button>
+  <button class="tb" onclick="setCat('P',this)">🏃 رِيَاضِيَّةٌ</button>
+  <button class="tb" onclick="setCat('V',this)">📝 أَفْعَالٌ</button>
+</div>
+
+<main>
+  <div class="cards-grid" id="cg"></div>
+  <div class="no-results" id="nr" style="display:none">لَا تُوجَدُ نَتَائِجُ لِبَحْثِكَ 😕</div>
+</main>
+
+<footer>
+  اَلْقَامُوسُ النَّاطِقُ لِلْمَلَابِسِ — مُصَمَّمٌ لِتَعْلِيمِ اللُّغَةِ الْعَرَبِيَّةِ
+</footer>
+
+<script>
+const W=[
+  {id:0, w:'قَمِيصٌ',        sp:'قميص',           t:'Shirt',       e:'👕',c:'U',col:'#7F77DD',ex:'أَرْتَدِي قَمِيصًا أَبْيَضَ كُلَّ يَوْمٍ'},
+  {id:1, w:'بَنْطَالٌ',      sp:'بنطال',          t:'Trousers',    e:'👖',c:'L',col:'#1D9E75',ex:'اِشْتَرَيْتُ بَنْطَالًا جَدِيدًا مِنَ السُّوقِ'},
+  {id:2, w:'فُسْتَانٌ',      sp:'فستان',          t:'Dress',       e:'👗',c:'U',col:'#D4537E',ex:'تَلْبَسُ أُخْتِي فُسْتَانًا وَرْدِيًّا جَمِيلًا'},
+  {id:3, w:'جَاكِيتٌ',       sp:'جاكيت',          t:'Jacket',      e:'🧥',c:'U',col:'#378ADD',ex:'أَحْتَاجُ جَاكِيتًا فِي الشِّتَاءِ'},
+  {id:4, w:'مِعْطَفٌ',       sp:'معطف',           t:'Coat',        e:'🧥',c:'U',col:'#185FA5',ex:'اَلْمِعْطَفُ الثَّقِيلُ يَقِي مِنَ الْبَرْدِ'},
+  {id:5, w:'تِي شِيرْتٌ',    sp:'تي شيرت',        t:'T-Shirt',     e:'👕',c:'U',col:'#D85A30',ex:'أُفَضِّلُ تِي شِيرْتَ الْأَلْوَانِ الزَّاهِيَةِ'},
+  {id:6, w:'بَلُوزَةٌ',      sp:'بلوزة',          t:'Blouse',      e:'👚',c:'U',col:'#D4537E',ex:'اَلْبَلُوزَةُ الْحَرِيرِيَّةُ أَنِيقَةٌ جِدًّا'},
+  {id:7, w:'سُتْرَةٌ',       sp:'سترة',           t:'Sweater',     e:'🧶',c:'U',col:'#BA7517',ex:'أَلْبَسُ السُّتْرَةَ فِي الطَّقْسِ الْبَارِدِ'},
+  {id:8, w:'بَنْطَالٌ قَصِيرٌ',sp:'بنطال قصير',  t:'Shorts',      e:'🩳',c:'L',col:'#D85A30',ex:'أَلْبَسُ الْبَنْطَالَ الْقَصِيرَ فِي يَوْمِ الشَّاطِئِ'},
+  {id:9, w:'تَنُّورَةٌ',     sp:'تنورة',          t:'Skirt',       e:'👗',c:'L',col:'#D4537E',ex:'اَلتَّنُّورَةُ الْقَصِيرَةُ مُنَاسِبَةٌ لِلصَّيْفِ'},
+  {id:10,w:'مَلَابِسُ دَاخِلِيَّةٌ',sp:'ملابس داخلية',t:'Underwear',e:'🩲',c:'L',col:'#888780',ex:'اَلْمَلَابِسُ الدَّاخِلِيَّةُ الْقُطْنِيَّةُ مُرِيحَةٌ'},
+  {id:11,w:'بِيجَامَةٌ',     sp:'بيجامة',         t:'Pajama',      e:'😴',c:'L',col:'#AFA9EC',ex:'أَرْتَدِي الْبِيجَامَةَ قَبْلَ النَّوْمِ'},
+  {id:12,w:'حِذَاءٌ',        sp:'حذاء',           t:'Shoe',        e:'👞',c:'S',col:'#639922',ex:'اِشْتَرَيْتُ حِذَاءً جِلْدِيًّا بُنِّيًّا'},
+  {id:13,w:'حِذَاءٌ رِيَاضِيٌّ',sp:'حذاء رياضي', t:'Sneakers',   e:'👟',c:'S',col:'#BA7517',ex:'اَلْحِذَاءُ الرِّيَاضِيُّ مُرِيحٌ جِدًّا'},
+  {id:14,w:'صَنْدَلٌ',       sp:'صندل',           t:'Sandal',      e:'🩴',c:'S',col:'#1D9E75',ex:'أَلْبَسُ الصَّنْدَلَ فِي الصَّيْفِ'},
+  {id:15,w:'حِزَامٌ',        sp:'حزام',           t:'Belt',        e:'🪢',c:'A',col:'#E24B4A',ex:'اَلْحِزَامُ يُحْكِمُ الْبَنْطَالَ جَيِّدًا'},
+  {id:16,w:'رَبْطَةُ عُنُقٍ',sp:'ربطة عنق',      t:'Necktie',     e:'👔',c:'A',col:'#3C3489',ex:'يَرْبِطُ أَبِي رَبْطَةَ عُنُقٍ حَمْرَاءَ'},
+  {id:17,w:'قُبَّعَةٌ',      sp:'قبعة',           t:'Hat',         e:'🧢',c:'A',col:'#D85A30',ex:'اَلْقُبَّعَةُ تَقِي مِنَ الشَّمْسِ'},
+  {id:18,w:'وِشَاحٌ',        sp:'وشاح',           t:'Scarf',       e:'🧣',c:'A',col:'#7F77DD',ex:'أَلُفُّ الْوِشَاحَ حَوْلَ رَقَبَتِي'},
+  {id:19,w:'قُفَّازٌ',       sp:'قفاز',           t:'Glove',       e:'🧤',c:'A',col:'#0C447C',ex:'اَلْقُفَّازُ يَحْمِي يَدَيَّ مِنَ الْبَرْدِ'},
+  {id:20,w:'جَوَارِبُ',      sp:'جوارب',          t:'Socks',       e:'🧦',c:'A',col:'#639922',ex:'أَلْبَسُ جَوَارِبَ بَيْضَاءَ كُلَّ يَوْمٍ'},
+  {id:21,w:'بَدْلَةٌ',       sp:'بدلة',           t:'Suit',        e:'🤵',c:'F',col:'#26215C',ex:'يَلْبَسُ الْمُدِيرُ بَدْلَةً رَمَادِيَّةً'},
+  {id:22,w:'فُسْتَانُ سَهْرَةٍ',sp:'فستان سهرة', t:'Evening Gown',e:'👘',c:'F',col:'#D4537E',ex:'اِشْتَرَتْ فُسْتَانَ سَهْرَةٍ أَنِيقًا'},
+  {id:23,w:'سَرَاوِيلُ رِيَاضِيَّةٌ',sp:'سراويل رياضية',t:'Sweatpants',e:'🩳',c:'P',col:'#1D9E75',ex:'أَلْبَسُ السَّرَاوِيلَ الرِّيَاضِيَّةَ فِي الصَّالَةِ'},
+];
+
+const VERBS=[
+  {id:100,c:'V',e:'👕',col:'#7F77DD',
+   w:'لَبِسَ / يَلْبَسُ',sp:'لبس يلبس',t:'To wear',
+   conj:[
+    {pron:'أَنَا',pronEn:'I',        v:'أَلْبَسُ',    sp:'البس',    en:'I wear'},
+    {pron:'أَنْتَ',pronEn:'You(m)',  v:'تَلْبَسُ',   sp:'تلبس',   en:'You wear'},
+    {pron:'أَنْتِ',pronEn:'You(f)',  v:'تَلْبَسِينَ',sp:'تلبسين', en:'You wear'},
+    {pron:'هُوَ', pronEn:'He',       v:'يَلْبَسُ',   sp:'يلبس',   en:'He wears'},
+    {pron:'هِيَ', pronEn:'She',      v:'تَلْبَسُ',   sp:'تلبس',   en:'She wears'},
+    {pron:'نَحْنُ',pronEn:'We',      v:'نَلْبَسُ',   sp:'نلبس',   en:'We wear'},
+    {pron:'أَنْتُمْ',pronEn:'You(pl)',v:'تَلْبَسُونَ',sp:'تلبسون', en:'You wear'},
+    {pron:'هُمْ', pronEn:'They',     v:'يَلْبَسُونَ',sp:'يلبسون', en:'They wear'},
+  ]},
+  {id:101,c:'V',e:'🛒',col:'#1D9E75',
+   w:'اِشْتَرَى / يَشْتَرِي',sp:'اشترى يشتري',t:'To buy',
+   conj:[
+    {pron:'أَنَا',pronEn:'I',         v:'أَشْتَرِي',   sp:'اشتري',   en:'I buy'},
+    {pron:'أَنْتَ',pronEn:'You(m)',   v:'تَشْتَرِي',   sp:'تشتري',   en:'You buy'},
+    {pron:'أَنْتِ',pronEn:'You(f)',   v:'تَشْتَرِينَ', sp:'تشترين',  en:'You buy'},
+    {pron:'هُوَ', pronEn:'He',        v:'يَشْتَرِي',   sp:'يشتري',   en:'He buys'},
+    {pron:'هِيَ', pronEn:'She',       v:'تَشْتَرِي',   sp:'تشتري',   en:'She buys'},
+    {pron:'نَحْنُ',pronEn:'We',       v:'نَشْتَرِي',   sp:'نشتري',   en:'We buy'},
+    {pron:'أَنْتُمْ',pronEn:'You(pl)',v:'تَشْتَرُونَ', sp:'تشترون',  en:'You buy'},
+    {pron:'هُمْ', pronEn:'They',      v:'يَشْتَرُونَ', sp:'يشترون',  en:'They buy'},
+  ]},
+  {id:102,c:'V',e:'🪡',col:'#D85A30',
+   w:'خَلَعَ / يَخْلَعُ',sp:'خلع يخلع',t:'To take off',
+   conj:[
+    {pron:'أَنَا',pronEn:'I',         v:'أَخْلَعُ',    sp:'اخلع',    en:'I take off'},
+    {pron:'أَنْتَ',pronEn:'You(m)',   v:'تَخْلَعُ',    sp:'تخلع',    en:'You take off'},
+    {pron:'أَنْتِ',pronEn:'You(f)',   v:'تَخْلَعِينَ', sp:'تخلعين',  en:'You take off'},
+    {pron:'هُوَ', pronEn:'He',        v:'يَخْلَعُ',    sp:'يخلع',    en:'He takes off'},
+    {pron:'هِيَ', pronEn:'She',       v:'تَخْلَعُ',    sp:'تخلع',    en:'She takes off'},
+    {pron:'نَحْنُ',pronEn:'We',       v:'نَخْلَعُ',    sp:'نخلع',    en:'We take off'},
+    {pron:'أَنْتُمْ',pronEn:'You(pl)',v:'تَخْلَعُونَ', sp:'تخلعون',  en:'You take off'},
+    {pron:'هُمْ', pronEn:'They',      v:'يَخْلَعُونَ', sp:'يخلعون',  en:'They take off'},
+  ]},
+  {id:103,c:'V',e:'✂️',col:'#378ADD',
+   w:'غَسَلَ / يَغْسِلُ',sp:'غسل يغسل',t:'To wash',
+   conj:[
+    {pron:'أَنَا',pronEn:'I',         v:'أَغْسِلُ',    sp:'اغسل',    en:'I wash'},
+    {pron:'أَنْتَ',pronEn:'You(m)',   v:'تَغْسِلُ',    sp:'تغسل',    en:'You wash'},
+    {pron:'أَنْتِ',pronEn:'You(f)',   v:'تَغْسِلِينَ', sp:'تغسلين',  en:'You wash'},
+    {pron:'هُوَ', pronEn:'He',        v:'يَغْسِلُ',    sp:'يغسل',    en:'He washes'},
+    {pron:'هِيَ', pronEn:'She',       v:'تَغْسِلُ',    sp:'تغسل',    en:'She washes'},
+    {pron:'نَحْنُ',pronEn:'We',       v:'نَغْسِلُ',    sp:'نغسل',    en:'We wash'},
+    {pron:'أَنْتُمْ',pronEn:'You(pl)',v:'تَغْسِلُونَ', sp:'تغسلون',  en:'You wash'},
+    {pron:'هُمْ', pronEn:'They',      v:'يَغْسِلُونَ', sp:'يغسلون',  en:'They wash'},
+  ]},
+  {id:104,c:'V',e:'👗',col:'#D4537E',
+   w:'اِرْتَدَى / يَرْتَدِي',sp:'ارتدى يرتدي',t:'To dress / put on',
+   conj:[
+    {pron:'أَنَا',pronEn:'I',         v:'أَرْتَدِي',    sp:'ارتدي',    en:'I dress'},
+    {pron:'أَنْتَ',pronEn:'You(m)',   v:'تَرْتَدِي',    sp:'ترتدي',    en:'You dress'},
+    {pron:'أَنْتِ',pronEn:'You(f)',   v:'تَرْتَدِينَ',  sp:'ترتدين',   en:'You dress'},
+    {pron:'هُوَ', pronEn:'He',        v:'يَرْتَدِي',    sp:'يرتدي',    en:'He dresses'},
+    {pron:'هِيَ', pronEn:'She',       v:'تَرْتَدِي',    sp:'ترتدي',    en:'She dresses'},
+    {pron:'نَحْنُ',pronEn:'We',       v:'نَرْتَدِي',    sp:'نرتدي',    en:'We dress'},
+    {pron:'أَنْتُمْ',pronEn:'You(pl)',v:'تَرْتَدُونَ',  sp:'ترتدون',   en:'You dress'},
+    {pron:'هُمْ', pronEn:'They',      v:'يَرْتَدُونَ',  sp:'يرتدون',   en:'They dress'},
+  ]},
+  {id:105,c:'V',e:'🧵',col:'#BA7517',
+   w:'فَصَّلَ / يُفَصِّلُ',sp:'فصل يفصل',t:'To tailor',
+   conj:[
+    {pron:'أَنَا',pronEn:'I',         v:'أُفَصِّلُ',    sp:'افصل',     en:'I tailor'},
+    {pron:'أَنْتَ',pronEn:'You(m)',   v:'تُفَصِّلُ',    sp:'تفصل',     en:'You tailor'},
+    {pron:'أَنْتِ',pronEn:'You(f)',   v:'تُفَصِّلِينَ', sp:'تفصلين',   en:'You tailor'},
+    {pron:'هُوَ', pronEn:'He',        v:'يُفَصِّلُ',    sp:'يفصل',     en:'He tailors'},
+    {pron:'هِيَ', pronEn:'She',       v:'تُفَصِّلُ',    sp:'تفصل',     en:'She tailors'},
+    {pron:'نَحْنُ',pronEn:'We',       v:'نُفَصِّلُ',    sp:'نفصل',     en:'We tailor'},
+    {pron:'أَنْتُمْ',pronEn:'You(pl)',v:'تُفَصِّلُونَ', sp:'تفصلون',   en:'You tailor'},
+    {pron:'هُمْ', pronEn:'They',      v:'يُفَصِّلُونَ', sp:'يفصلون',   en:'They tailor'},
+  ]},
+];
+
+const ALL=[...W,...VERBS];
+let cat='all', srch='', rate=0.6;
+
+function upSpd(v){
+  rate=parseFloat(v);
+  const an=['٠','١','٢','٣','٤','٥','٦','٧','٨','٩'];
+  document.getElementById('spL').textContent=v.toString().split('').map(c=>/[0-9]/.test(c)?an[+c]:c==='.'?'٫':c).join('');
+}
+function setCat(v,btn){
+  cat=v;
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+function doFilter(){
+  srch=document.getElementById('srch').value.trim();
+  render();
+}
+function render(){
+  let list=ALL.filter(w=>(cat==='all'||w.c===cat));
+  if(srch) list=list.filter(w=>w.w.includes(srch)||(w.sp&&w.sp.includes(srch))||w.t.toLowerCase().includes(srch.toLowerCase()));
+  const g=document.getElementById('cg');
+  const nr=document.getElementById('nr');
+  if(!list.length){g.innerHTML='';nr.style.display='block';return;}
+  nr.style.display='none';
+  g.innerHTML=list.map(item=>item.conj?verbCard(item):wordCard(item)).join('');
+}
+function wordCard(w){
+  return `<div class="wc" id="wc${w.id}" onclick="say('${w.sp}',${w.id},'wc')">
+    <div class="ce">${w.e}</div>
+    <div class="cb" style="background:${w.col}"></div>
+    <div class="cw">${w.w}</div>
+    <div class="ct">${w.t}</div>
+    <div class="cx">${w.ex}</div>
+    <button class="sb" onclick="event.stopPropagation();say('${w.sp}',${w.id},'wc')">🔊 اِسْتَمِعْ</button>
+  </div>`;
+}
+function verbCard(v){
+  const conjs=v.conj.map((c,i)=>`
+    <div class="ci" id="ci${v.id}_${i}" onclick="sayConj('${c.sp}',${v.id},${i})">
+      <div class="ci-pron">${c.pron} <span style="opacity:.7;font-size:10px">${c.pronEn}</span></div>
+      <div class="ci-verb">${c.v}</div>
+      <div class="ci-en">${c.en}</div>
+    </div>`).join('');
+  return `<div class="vc">
+    <div class="vc-head">
+      <div class="vc-emoji">${v.e}</div>
+      <div>
+        <div class="vc-title" style="color:${v.col}">${v.w}</div>
+        <div class="vc-en">${v.t}</div>
+      </div>
+    </div>
+    <div class="conj-grid">${conjs}</div>
+  </div>`;
+}
+function say(sp,id,prefix){
+  const card=document.getElementById(prefix+id);
+  if(card){card.classList.add('speaking');setTimeout(()=>card.classList.remove('speaking'),Math.max(1400,(1/rate)*900));}
+  speak(sp);
+}
+function sayConj(sp,vid,idx){
+  const el=document.getElementById('ci'+vid+'_'+idx);
+  if(el){el.classList.add('speaking');setTimeout(()=>el.classList.remove('speaking'),Math.max(1200,(1/rate)*800));}
+  speak(sp);
+}
+function speak(text){
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text);
+  u.lang='ar-SA'; u.rate=rate; u.pitch=1.05;
+  function go(){
+    const vs=window.speechSynthesis.getVoices();
+    const ar=vs.find(v=>v.lang==='ar-SA')||vs.find(v=>v.lang.startsWith('ar'));
+    if(ar)u.voice=ar;
+    window.speechSynthesis.speak(u);
+  }
+  if(window.speechSynthesis.getVoices().length) go();
+  else{window.speechSynthesis.onvoiceschanged=()=>{window.speechSynthesis.onvoiceschanged=null;go();};}
+}
+render();
+</script>
+</body>
+</html>
